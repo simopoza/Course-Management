@@ -25,7 +25,7 @@ export class AuthService {
     const { email, password } = loginDto;
 
     const user = await this.validateUser(email, password);
-    if (!user) {
+    if (!user || !user.isActive) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
@@ -121,10 +121,11 @@ export class AuthService {
         password: hashedPassword,
       });
   
-      const confirmationLink = `http://localhost:3000/auth/confirm?token=${newUser.id}`;
+      const confirmationLink = `https://localhost:3000/auth/confirm?token=${newUser._id}`;
+      console.log('id: ', newUser._id);
       await this.emailService.sendConfirmationEmail(newUser.email, confirmationLink);
 
-      return newUser.save();
+      return await newUser.save();
     } catch (error) {
       console.log("Error: ", error);
 
@@ -147,6 +148,7 @@ export class AuthService {
     }
   
     user.isActive = true; // Assuming you have an `isActive` field in the schema
+    console.log("user: ", user);
     await user.save(); // Save the updated user
   }
 }

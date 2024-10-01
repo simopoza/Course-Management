@@ -8,7 +8,6 @@ import * as dotenv from 'dotenv';
 import * as path from 'path';
 import * as fs from 'fs';
 
-const cors = require('cors');
 dotenv.config();  // Load environment variables
 
 async function bootstrap() {
@@ -27,12 +26,13 @@ async function bootstrap() {
 
   // Swagger setup
   const config = new DocumentBuilder()
-    .setTitle('money-transfer-app')
-    .setDescription('API description')
-    .setVersion('1.0')
-    .build();
+  .setTitle('API Documentation')
+  .setDescription('API description')
+  .setVersion('1.0')
+  .build();
+
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('/', app, document);
+  SwaggerModule.setup('api', app, document); 
 
   app.useGlobalPipes(new ValidationPipe());
 

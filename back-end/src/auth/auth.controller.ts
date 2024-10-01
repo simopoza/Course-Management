@@ -38,8 +38,9 @@ export class AuthController {
   @Get('confirm')
   async confirm(@Query('token') token: string, @Res() res: Response): Promise<void> {
     try {
+      console.log("token: ", token);
       await this.authService.activateUser(token); // Ensure this method is implemented correctly
-      res.redirect('http://localhost:5173/');
+      res.redirect('https://localhost:5173/');
     } catch (error) {
       console.error('Error confirming user:', error);
       res.status(400).send('Invalid or expired confirmation token.');
