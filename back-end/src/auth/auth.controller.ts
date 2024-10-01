@@ -47,8 +47,15 @@ export class AuthController {
     }
   }
 
+  @Get('check')
+  @UseGuards(JwtAuthGuard)
+  checkAuth(@Req() req, @Res() res: Response) {
+    // If the request passed the guard, it means the user is authenticated
+    console.log('im in : ');
+    return res.status(200).json({ message: 'Authenticated' });
+  }
+
   @Post('refresh-token')
-  @UseGuards(IpValidationGuard)
   async refreshToken(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const refreshToken = req.cookies['refreshToken']; // Read the refresh token from the cookies
 
@@ -61,17 +68,24 @@ export class AuthController {
   }
 
   @Post('logout')
+  @UseGuards(JwtAuthGuard)
   logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
-    return { message: 'Logged out successfully' };
+    try {
+      // Logic for logout (clearing tokens, etc.)
+      res.clearCookie('accessToken');
+      res.clearCookie('refreshToken');
+      res.json({ message: 'Logged out successfully' });
+    } catch (error) {
+      console.error('Error during logout:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
   }
 
-  @Get('/test')
-  @UseGuards(JwtAuthGuard)
-  test() {
-    console.log('im in');
-    return ('data');
-  }
+  // @Get('/test')
+  // @UseGuards(JwtAuthGuard)
+  // test() {
+  //   console.log('im in');
+  //   return ('data');
+  // }
 
 }

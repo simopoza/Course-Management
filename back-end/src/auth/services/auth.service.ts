@@ -39,14 +39,14 @@ export class AuthService {
     res.cookie('accessToken', accessToken, {
       httpOnly: true, // Makes it inaccessible to JavaScript
       secure: true,   // Only sent over HTTPS
-      sameSite: 'strict', // Prevents CSRF (cross-site request forgery) attacks
+      sameSite: 'none', // Prevents CSRF (cross-site request forgery) attacks
       maxAge: 1 * 60 * 1000, // time expiry
     });
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: 'strict',
+      sameSite: 'none',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -72,14 +72,14 @@ export class AuthService {
       res.cookie('accessToken', newAccessToken, {
         httpOnly: true,
         secure: true,
-        sameSite: 'strict',
+        sameSite: 'none',
         maxAge: 1 * 60 * 1000, // 15 minutes
       });
 
       res.cookie('refreshToken', newRefreshToken, {
         httpOnly: true,
         secure: true,
-        sameSite: 'strict',
+        sameSite: 'none',
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
 

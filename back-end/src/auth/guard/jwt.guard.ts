@@ -1,9 +1,22 @@
-import { Injectable, ExecutionContext } from '@nestjs/common';
+import { Injectable, ExecutionContext, UnauthorizedException, CanActivate } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {
+export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
-    return super.canActivate(context) as boolean;
+    const request = context.switchToHttp().getRequest();
+    const user = request.user;
+
+    console.log('user: ', user);
+
+    console.log(request.headers);
+    console.log('cookies: ', request.cookies);
+
+    console.log('==================================\nim here\n=====================================')
+    // Avoid returning the full `request` object
+    if (!request.cookies['accessToken']) {
+      throw new UnauthorizedException();
+    }
+    return true;
   }
 }
