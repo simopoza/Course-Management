@@ -33,16 +33,15 @@ Before you begin, ensure you have the following installed on your machine:
 
 Install dependencies Navigate to both the backend and frontend directories to install their dependencies.
 
-Backend
-cd backend
-npm install
+- Backend
 
-Frontend
-cd frontend
-npm install
 
-Setup Environment Variables Create a .env file in the backend directory and populate it with the required environment variables. You may need to define:
+      cd backend
+      
+      
+      npm install
 
+<<<<<<< HEAD
 MONGODB_URI=your_mongodb_connection_string
 
 EMAIL_HOST=smtp.gmail.com
@@ -52,17 +51,42 @@ EMAIL_PORT=587
 EMAIL_USER=mohammedannahri20@gmail.com
 
 EMAIL_PASS=rgps qfuo tvvf oqnb
+=======
+- Frontend
+>>>>>>> a5179f8be7b6962bb3f2b1edd7f4d37821cd1f5c
 
-JWT_SECRET=jwt-secret-poza
+      
+      cd frontend
+      
+      
+      npm install
 
+<<<<<<< HEAD
 
 Run the Application To run the backend server, execute:
+=======
+- Setup Environment Variables Create a .env file in the backend directory and populate it with the required environment variables. You may need to define:
+>>>>>>> a5179f8be7b6962bb3f2b1edd7f4d37821cd1f5c
 
-npm run start:dev
+      MONGODB_URI=your_mongodb_connection_string
+      
+      EMAIL_HOST=smtp.gmail.com
+      
+      EMAIL_PORT=587
+      
+      EMAIL_USER=mohammedannahri20@gmail.com
+      
+      EMAIL_PASS=rgps qfuo tvvf oqnb
+      
+      JWT_SECRET=jwt-secret-poza
 
-To run the frontend application, navigate to the frontend directory and execute:
+- Run the Application To run the backend server, execute:
 
-npm start
+   npm run start:dev
+
+- To run the frontend application, navigate to the frontend directory and execute:
+
+   npm start
 
 License
 
