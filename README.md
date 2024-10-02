@@ -41,32 +41,16 @@ Install dependencies Navigate to both the backend and frontend directories to in
       
       npm install
 
-<<<<<<< HEAD
-MONGODB_URI=your_mongodb_connection_string
 
-EMAIL_HOST=smtp.gmail.com
-
-EMAIL_PORT=587
-
-EMAIL_USER=mohammedannahri20@gmail.com
-
-EMAIL_PASS=rgps qfuo tvvf oqnb
-=======
 - Frontend
->>>>>>> a5179f8be7b6962bb3f2b1edd7f4d37821cd1f5c
-
       
       cd frontend
       
       
       npm install
 
-<<<<<<< HEAD
 
-Run the Application To run the backend server, execute:
-=======
 - Setup Environment Variables Create a .env file in the backend directory and populate it with the required environment variables. You may need to define:
->>>>>>> a5179f8be7b6962bb3f2b1edd7f4d37821cd1f5c
 
       MONGODB_URI=your_mongodb_connection_string
       
