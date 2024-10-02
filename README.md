@@ -44,12 +44,17 @@ npm install
 Setup Environment Variables Create a .env file in the backend directory and populate it with the required environment variables. You may need to define:
 
 MONGODB_URI=your_mongodb_connection_string
+
 EMAIL_HOST=smtp.gmail.com
+
 EMAIL_PORT=587
+
 EMAIL_USER=mohammedannahri20@gmail.com
+
 EMAIL_PASS=rgps qfuo tvvf oqnb
 
 JWT_SECRET=jwt-secret-poza
+
 
 Run the Application To run the backend server, execute:
 

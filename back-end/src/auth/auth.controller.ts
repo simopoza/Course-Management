@@ -26,10 +26,11 @@ export class AuthController {
         throw new HttpException('Registration failed', HttpStatus.BAD_REQUEST);
       }
     } catch (error) {
+      console.log(error.message)
       if (error instanceof HttpException) {
         throw error;
       }
-      throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

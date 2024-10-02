@@ -3,6 +3,7 @@ import LoginPage from './pages/LoginPage';
 import RegistrationPage from './pages/RegistrationPage';
 import ConfirmationPage from './pages/ConfirmationPage';
 import HomePage from './pages/HomePage';
+import NotFoundPage from './pages/NotFoundPage';
 
 const router = createBrowserRouter([
   {
@@ -14,12 +15,16 @@ const router = createBrowserRouter([
     element: <RegistrationPage />,
   },
   {
-    path: "/confirmation",
+    path: '/confirmation',
     element: <ConfirmationPage />,
   },
   {
-    path: "/HomePage",
+    path: '/HomePage',
     element: <HomePage />,
+  },
+  {
+    path: '*',
+    element: <NotFoundPage />,
   },
 ]);
 
