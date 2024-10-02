@@ -7,46 +7,65 @@ import { PaginationDto } from './dto/paginationDto';
 
 @Injectable()
 export class CourseService {
-    constructor(@InjectModel(Course.name) private courseModel: Model<Course>) {}
+	constructor(@InjectModel(Course.name) private courseModel: Model<Course>) {}
 
-    async findAll(paginationDto: PaginationDto): Promise<{ data: Course[]; total: number }> {
-        console.log("pagination: ", paginationDto);
-        const { page, limit } = paginationDto;
+	// Search and Pagination logic
+	async findAll(query: string, searchType: string, paginationDto: PaginationDto): Promise<{ data: Course[]; total: number }> {
+		const { page, limit } = paginationDto;
+		const skip = (page - 1) * limit;
+		const regex = new RegExp(query, 'i'); // Case-insensitive search
 
-        const skip = (page - 1) * limit;
+		// Build the search criteria based on the search type (title or instructor)
+		let searchCriteria = {};
+		if (searchType === 'title') {
+			searchCriteria = { title: regex };
+		} else if (searchType === 'instructor') {
+			searchCriteria = { instructor: regex };
+		} else {
+			// If no specific search type is provided, search both fields
+			searchCriteria = {
+				$or: [
+					{ title: regex },
+					{ instructor: regex },
+				],
+			};
+		}
 
-        const [data, total] = await Promise.all([
-            this.courseModel.find().skip(skip).limit(limit).exec(),
-            this.courseModel.countDocuments().exec(),
-        ]);
+		// Fetch paginated and filtered results
+		const [data, total] = await Promise.all([
+			this.courseModel
+					.find(searchCriteria)  // Search by the criteria
+					.skip(skip)
+					.limit(limit)
+					.exec(),
+			this.courseModel.countDocuments(searchCriteria).exec(),  // Count matching documents
+		]);
 
-        return { data, total };
-    }
+		return { data, total };
+	}
 
-    async populateCourses() {
-        try {
-            // Check if the courses collection is empty
-            const count = await this.courseModel.countDocuments();
-            if (count === 0) {
-                console.log('Courses collection is empty. Populating with data from JSON file...');
+	// Populating courses
+	async populateCourses() {
+		try {
+			const count = await this.courseModel.countDocuments();
+			if (count === 0) {
+				console.log('Courses collection is empty. Populating with data from JSON file...');
 
-                // Read the JSON file
-                const data = await fs.readFile('data/courses_data.json', 'utf-8');
-                const courses = JSON.parse(data);
+				const data = await fs.readFile('data/courses_data.json', 'utf-8');
+				const courses = JSON.parse(data);
 
-                // Insert data into the courses collection with pagination
-                const batchSize = 100; // Number of documents to insert at a time
-                for (let i = 0; i < courses.length; i += batchSize) {
-                    const batch = courses.slice(i, i + batchSize);
-                    await this.courseModel.insertMany(batch);
-                    console.log(`Inserted batch ${Math.ceil(i / batchSize) + 1}`);
-                }
-                console.log('All courses have been added to the database.');
-            } else {
-                console.log('Courses collection is already populated.');
-            }
-        } catch (error) {
-            console.error('Error populating courses:', error);
-        }
-    }
+				const batchSize = 100; // Batch insert
+				for (let i = 0; i < courses.length; i += batchSize) {
+					const batch = courses.slice(i, i + batchSize);
+					await this.courseModel.insertMany(batch);
+					console.log(`Inserted batch ${Math.ceil(i / batchSize) + 1}`);
+				}
+				console.log('All courses have been added to the database.');
+			} else {
+				console.log('Courses collection is already populated.');
+			}
+		} catch (error) {
+			console.error('Error populating courses:', error);
+		}
+	}
 }

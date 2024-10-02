@@ -16,20 +16,34 @@ interface CoursesResponse {
 }
 
 // Fetch courses data from the server
-const fetchCourses = async ({ page, limit }: { page: number; limit: number }): Promise<CoursesResponse> => {
-  const { data } = await axiosInstance.get('/courses', {
-    params: { page, limit },
+const fetchCourses = async ({
+  page,
+  limit,
+  query = '',
+  searchType = 'title',  // Default search type is 'title'
+}: {
+  page: number;
+  limit: number;
+  query?: string;
+  searchType?: string;
+}): Promise<CoursesResponse> => {
+  const { data } = await axiosInstance.get('https://localhost:3000/courses', {
+    params: { page, limit, query, searchType },
   });
-  console.log('data: ', data);
   return data; // Return the API response directly
 };
 
-// Custom hook to use pagination for courses
-export const useCourses = (page: number, limit: number) => {
+// Custom hook to use pagination and search for courses
+export const useCourses = (
+  page: number, 
+  limit: number, 
+  query: string = '',         
+  searchType: string = 'title'
+) => {
   return useQuery({
-    queryKey: ['courses', page],    // This is the query key
-    queryFn: () => fetchCourses({ page, limit }),  // This is the query function
-    select: (data) => data, // You can transform your data here if needed
+    queryKey: ['courses', page, query, searchType],
+    queryFn: () => fetchCourses({ page, limit, query, searchType }),
+    select: (data) => data,
     keepPreviousData: true,  // Retain previous data while new data is being fetched
   } as UseQueryOptions<CoursesResponse, Error>);
 };

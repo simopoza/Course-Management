@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './services/auth.service';
 import { EmailService } from './services/email.service';
@@ -7,7 +7,6 @@ import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt/jwt-strategy';
 import { UserModule } from 'src/user/user.module';
-import { AuthMiddleware } from './auth.middleware';
 
 @Module({
 	imports: [
@@ -22,10 +21,4 @@ import { AuthMiddleware } from './auth.middleware';
   controllers: [AuthController],
   providers: [AuthService, EmailService, JwtStrategy],
 })
-export class AuthModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(AuthMiddleware)
-      .forRoutes({ path: '/auth/check', method: RequestMethod.GET }); // Apply to specific route
-  }
-}
+export class AuthModule {}

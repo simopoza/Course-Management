@@ -8,16 +8,14 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 @Controller('courses')
 export class CourseController {
     constructor(private readonly courseService: CourseService) {}
-
+    
     @Get('')
     @UseGuards(JwtAuthGuard)
-    async getCourses(@Query() paginationDto: PaginationDto) {
-        console.log('data: ', paginationDto);
-        return await this.courseService.findAll(paginationDto);
-    }
-    @Get('walo')
-    wlo() {
-        console.log('wlo');
-        return ("walo");
+    async getCourses(
+        @Query() paginationDto: PaginationDto,
+        @Query('query') query: string, 
+        @Query('searchType') searchType: string
+    ) {
+        return await this.courseService.findAll(query, searchType, paginationDto);
     }
 }

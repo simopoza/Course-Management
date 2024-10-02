@@ -32,7 +32,6 @@ export class AuthService {
     // Generate JWT token
     const payload = { email: user.email, sub: user._id };
     const accessToken = this.jwtService.sign(payload);
-    const refreshToken = this.jwtService.sign(payload, { secret: this.refreshTokenSecret, expiresIn: this.refreshTokenExpiration });
 
     const { password: _, ...userWithoutPassword } = user; // Exclude password
 
@@ -40,14 +39,7 @@ export class AuthService {
       httpOnly: true, // Makes it inaccessible to JavaScript
       secure: true,   // Only sent over HTTPS
       sameSite: 'none', // Prevents CSRF (cross-site request forgery) attacks
-      maxAge: 1 * 60 * 1000, // time expiry
-    });
-
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: 15 * 60 * 1000, // time expiry
     });
 
     return {
@@ -55,43 +47,6 @@ export class AuthService {
       user: userWithoutPassword,
     };
   }
-
-  async refreshToken(refreshToken: string, @Res({ passthrough: true }) res: Response) {
-    try {
-      const decoded = this.jwtService.verify(refreshToken, { secret: this.refreshTokenSecret });
-      const { email, sub: userId } = decoded;
-
-      const user = await this.userModel.findOne({ email });
-      if (!user) {
-        throw new UnauthorizedException('Invalid refresh token');
-      }
-
-      const newAccessToken = this.jwtService.sign({ email, sub: userId });
-      const newRefreshToken = this.jwtService.sign({ email, sub: userId }, { secret: this.refreshTokenSecret, expiresIn: this.refreshTokenExpiration });
-
-      res.cookie('accessToken', newAccessToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-        maxAge: 1 * 60 * 1000, // 15 minutes
-      });
-
-      res.cookie('refreshToken', newRefreshToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      });
-
-      // console.log('access: ', newAccessToken);
-      // console.log('refresh: ', newRefreshToken);
-
-      return { message: 'Tokens refreshed successfully' };
-    } catch (error) {
-      throw new UnauthorizedException('Invalid refresh token');
-    }
-  }
-
 
   async validateUser(email: string, password: string){
     const user = await this.userModel.findOne({ email });

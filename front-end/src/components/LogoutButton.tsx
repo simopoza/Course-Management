@@ -8,8 +8,7 @@ const LogoutButton: React.FC = () => {
   const handleLogout = async () => {
     setIsLoggingOut(true); // Start loading state
     try {
-      const response = await axiosInstance.post('/auth/logout');
-      console.log('Logout success:', response.data.message);
+      await axiosInstance.post('/auth/logout');
       window.location.href = '/'; // Redirect to the login page after logout
     } catch (error: any) {
       if (error.response) {

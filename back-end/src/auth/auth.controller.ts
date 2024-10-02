@@ -5,7 +5,6 @@ import { RegisterDto } from 'src/auth/dto/registerDto';
 import { Request, Response } from 'express';
 import { LoginDto } from 'src/auth/dto/loginDto';
 import { JwtAuthGuard } from './guard/jwt.guard';
-import { IpValidationGuard } from './guard/ipValidation.guard';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -19,7 +18,6 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
-    console.log("data: ", registerDto);
     try {
       const user = await this.authService.register(registerDto);
       if (user) {
@@ -38,11 +36,9 @@ export class AuthController {
   @Get('confirm')
   async confirm(@Query('token') token: string, @Res() res: Response): Promise<void> {
     try {
-      console.log("token: ", token);
       await this.authService.activateUser(token); // Ensure this method is implemented correctly
       res.redirect('https://localhost:5173/');
     } catch (error) {
-      console.error('Error confirming user:', error);
       res.status(400).send('Invalid or expired confirmation token.');
     }
   }
@@ -50,21 +46,7 @@ export class AuthController {
   @Get('check')
   @UseGuards(JwtAuthGuard)
   checkAuth(@Req() req, @Res() res: Response) {
-    // If the request passed the guard, it means the user is authenticated
-    console.log('im in : ');
     return res.status(200).json({ message: 'Authenticated' });
-  }
-
-  @Post('refresh-token')
-  async refreshToken(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const refreshToken = req.cookies['refreshToken']; // Read the refresh token from the cookies
-
-    console.log('refresh token');
-
-    if (!refreshToken) {
-      return res.status(401).json({ message: 'Refresh token not provided' });
-    }
-    return this.authService.refreshToken(refreshToken, res);
   }
 
   @Post('logout')
@@ -80,12 +62,4 @@ export class AuthController {
       res.status(500).json({ message: 'Internal server error' });
     }
   }
-
-  // @Get('/test')
-  // @UseGuards(JwtAuthGuard)
-  // test() {
-  //   console.log('im in');
-  //   return ('data');
-  // }
-
 }
