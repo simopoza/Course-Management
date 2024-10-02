@@ -72,13 +72,3 @@ Install dependencies Navigate to both the backend and frontend directories to in
 
    npm run start
 
-License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-- Acknowledgments
-    NestJS - The framework used for building the backend.
-
-    React Query - For data fetching and state management.
-    
-    Axios - For making HTTP requests.
