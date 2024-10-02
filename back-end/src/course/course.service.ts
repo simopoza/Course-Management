@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { Course } from './course.schema';
 import { promises as fs } from 'fs';
 import { PaginationDto } from './dto/paginationDto';
+import { CreateCourseDto } from './dto/createCourse.dto'; // Import the DTO
 
 @Injectable()
 export class CourseService {
@@ -15,14 +16,12 @@ export class CourseService {
 		const skip = (page - 1) * limit;
 		const regex = new RegExp(query, 'i'); // Case-insensitive search
 
-		// Build the search criteria based on the search type (title or instructor)
 		let searchCriteria = {};
 		if (searchType === 'title') {
 			searchCriteria = { title: regex };
 		} else if (searchType === 'instructor') {
 			searchCriteria = { instructor: regex };
 		} else {
-			// If no specific search type is provided, search both fields
 			searchCriteria = {
 				$or: [
 					{ title: regex },
@@ -31,14 +30,13 @@ export class CourseService {
 			};
 		}
 
-		// Fetch paginated and filtered results
 		const [data, total] = await Promise.all([
 			this.courseModel
-					.find(searchCriteria)  // Search by the criteria
+					.find(searchCriteria) 
 					.skip(skip)
 					.limit(limit)
 					.exec(),
-			this.courseModel.countDocuments(searchCriteria).exec(),  // Count matching documents
+			this.courseModel.countDocuments(searchCriteria).exec(), 
 		]);
 
 		return { data, total };
@@ -68,4 +66,11 @@ export class CourseService {
 			console.error('Error populating courses:', error);
 		}
 	}
+
+	// Create a new course
+	async create(createCourseDto: CreateCourseDto): Promise<Course> {
+		const newCourse = new this.courseModel(createCourseDto);
+		return await newCourse.save(); // Save the new course in the database
+	}
+
 }
