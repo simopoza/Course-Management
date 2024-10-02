@@ -29,7 +29,7 @@ Before you begin, ensure you have the following installed on your machine:
 1. **Clone the repository**
    ```bash
    git clone git@github.com:simopoza/Course-Management.git
-   cd Course-Management.git
+   cd Course-Management
 
 Install dependencies Navigate to both the backend and frontend directories to install their dependencies.
 
@@ -70,13 +70,15 @@ Install dependencies Navigate to both the backend and frontend directories to in
 
 - To run the frontend application, navigate to the frontend directory and execute:
 
-   npm start
+   npm run start
 
 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-Acknowledgments
+- Acknowledgments
     NestJS - The framework used for building the backend.
+
     React Query - For data fetching and state management.
+    
     Axios - For making HTTP requests.
